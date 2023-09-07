@@ -15,3 +15,7 @@ Very very very early. You can support me on [Ko-Fi](https://ko-fi.com/vivithehei
 ### Why are there no Begin and End nodes?
 I've decided to make those a single K2 Node that handles calling Begin and End functions automatically, since they can clutter up Blueprint Graphs pretty easily.  
 I find that they are also much more convenient to use.
+
+## Credits
+- [rtm223](https://github.com/rtm223) and [Ryan-DownlingSoka](https://github.com/Ryan-DowlingSoka) - helping me out with K2 Nodes
+- [MagForceSeven](https://github.com/MagForceSeven/UE-K2-Nodes) - K2 Node examples and utility code
