@@ -4,6 +4,7 @@
 
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "imgui.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "ImGuiBlueprintLibrary.generated.h"
 
 /* 
@@ -46,7 +47,7 @@ public:
 	static void ImGui_Text(FText Text, FLinearColor Color = FLinearColor(1.0f,1.0f,1.0f))
 	{
 		const FColor SRGB = Color.ToFColorSRGB();
-		ImGui::TextColored(ImVec4(SRGB.R/255.f, SRGB.G/255.f, SRGB.B/255.f, SRGB.A/255.f), "%s", TCHAR_TO_UTF8(*Text.ToString()));
+		ImGui::TextColored(ImVec4(SRGB.R/255.f, SRGB.G/255.f, SRGB.B/255.f, SRGB.A/255.f), "%s", TCHAR_TO_UTF8(*Text));
 	}
 
 	UFUNCTION(BlueprintCallable, Category="ImGui|Basic", meta=(AdvancedDisplay=1), BlueprintInternalUseOnly)
@@ -59,6 +60,70 @@ public:
 	static void ImGui_SameLine(float OffsetFromStartX, float Spacing = -1)
 	{
 		ImGui::SameLine(OffsetFromStartX, Spacing);
+	}
+
+	UFUNCTION(BlueprintCallable, Category="ImGui|Basic")
+	static bool ImGui_Slider(FString Text, float Min, float Max, float& Value)
+	{
+		static float SliderValue = 0;
+		bool Success = ImGui::SliderFloat(TCHAR_TO_UTF8(*Text), &SliderValue, Min, Max);
+		Value = SliderValue;
+		return Success;
+	}
+
+	UFUNCTION(BlueprintCallable, Category="ImGui|Basic")
+	static bool ImGui_VSlider(FString Text, float Min, float Max, FVector2D Size, float& Value)
+	{
+		static float SliderValue = 0;
+		bool Success = ImGui::VSliderFloat(TCHAR_TO_UTF8(*Text), ImVec2(Size.X, Size.Y), &SliderValue, Min, Max);
+		Value = SliderValue;
+		return Success;
+	}
+
+	//If @Text is empty, it'll display the percentage
+	UFUNCTION(BlueprintCallable, Category="ImGui|Basic")
+	static void ImGui_ProgressBar(float Progress, float Min, float Max, FVector2D Size, FString Text)
+	{
+		float NewProgress =	UKismetMathLibrary::MapRangeClamped(Progress, Min, Max, 0, 1);
+		if(Text.IsEmpty())
+		{
+			ImGui::ProgressBar(NewProgress, ImVec2(Size.X, Size.Y));
+		}
+		else
+		{
+			ImGui::ProgressBar(NewProgress, ImVec2(Size.X, Size.Y), TCHAR_TO_UTF8(*Text));
+		}
+	}
+
+	UFUNCTION(BlueprintCallable, Category="ImGui|Basic")
+	static void ImGui_PlotLines(FString Text, TArray<float> Floats, FVector2D Size, float Min, float Max)
+	{
+		//Figure out the average, min and max.
+		//We have to pass min and max if we want to pass in custom size.
+		float Average = 0;
+		for(auto& CurrentFloat : Floats)
+		{
+			Average += CurrentFloat;
+		}
+		Average = Average/Floats.Num();
+		
+		ImGui::PlotLines(TCHAR_TO_UTF8(*Text), Floats.GetData(), Floats.Num(), 0,
+			TCHAR_TO_UTF8(*FString::SanitizeFloat(Average)), Min, Max, ImVec2(Size.X, Size.Y));
+	}
+
+	UFUNCTION(BlueprintCallable, Category="ImGui|Basic")
+	static bool ImGui_Checkbox(FString Text, UPARAM(ref) bool& BoolToUpdate)
+	{
+		static bool Value;
+		bool Pressed =  ImGui::Checkbox(TCHAR_TO_UTF8(*Text), &Value);
+		BoolToUpdate = Value;
+		return Pressed;
+	}
+
+	UFUNCTION(BlueprintCallable, Category="ImGui|Basic")
+	static void ImGui_Separator()
+	{
+		ImGui::Separator();
 	}
 
 	// Widgets: Menus
