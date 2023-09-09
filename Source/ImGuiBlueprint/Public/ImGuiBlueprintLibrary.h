@@ -44,16 +44,16 @@ public:
 	}
 
 	UFUNCTION(BlueprintCallable, Category="ImGui|Basic", meta=(AdvancedDisplay=1))
-	static void ImGui_Text(FText Text, FLinearColor Color = FLinearColor(1.0f,1.0f,1.0f))
+	static void ImGui_Text(FString Text, FLinearColor Color = FLinearColor(1.0f,1.0f,1.0f))
 	{
 		const FColor SRGB = Color.ToFColorSRGB();
 		ImGui::TextColored(ImVec4(SRGB.R/255.f, SRGB.G/255.f, SRGB.B/255.f, SRGB.A/255.f), "%s", TCHAR_TO_UTF8(*Text));
 	}
 
 	UFUNCTION(BlueprintCallable, Category="ImGui|Basic", meta=(AdvancedDisplay=1), BlueprintInternalUseOnly)
-	static bool ImGui_Button(FText Name, FVector2D Size)
+	static bool ImGui_Button(FString Text, FVector2D Size)
 	{
-		return ImGui::Button(TCHAR_TO_UTF8(*Name.ToString()), ImVec2(static_cast<float>(Size.X), static_cast<float>(Size.Y)));
+		return ImGui::Button(TCHAR_TO_UTF8(*Text), ImVec2(static_cast<float>(Size.X), static_cast<float>(Size.Y)));
 	}
 
 	UFUNCTION(BlueprintCallable, Category="ImGui|Basic", meta=(AdvancedDisplay="OffsetFromStartX,Spacing"))
@@ -158,8 +158,8 @@ public:
 
 	// NOTE: Shortcuts are not processed by Dear ImGui automatically
 	UFUNCTION(BlueprintCallable, Category="ImGui|Menus")
-	static bool ImGui_MenuItem(FText Label, FString Shortcut, bool Selected = false, bool Enabled = true)
+	static bool ImGui_MenuItem(FString Text, FString Shortcut, bool Selected = false, bool Enabled = true)
 	{
-		return ImGui::MenuItem(TCHAR_TO_UTF8(*Label.ToString()), TCHAR_TO_UTF8(*Shortcut), Selected, Enabled);
+		return ImGui::MenuItem(TCHAR_TO_UTF8(*Text), TCHAR_TO_UTF8(*Shortcut), Selected, Enabled);
 	}
 };
