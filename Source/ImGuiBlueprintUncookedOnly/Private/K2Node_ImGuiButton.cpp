@@ -25,7 +25,7 @@
 #define LOCTEXT_NAMESPACE "UK2Node_ImGuiButton"
 
 const FName UK2Node_ImGuiButton::OnClickExecutionPinName(TEXT("OnClickPin"));
-const FName UK2Node_ImGuiButton::NamePinName(TEXT("NamePin"));
+const FName UK2Node_ImGuiButton::NamePinName(TEXT("Text"));
 const FName UK2Node_ImGuiButton::SizePinName(TEXT("SizePin"));
 
 void UK2Node_ImGuiButton::GetMenuActions(FBlueprintActionDatabaseRegistrar& ActionRegistrar) const
@@ -46,7 +46,7 @@ void UK2Node_ImGuiButton::AllocateDefaultPins()
 	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Exec, UEdGraphSchema_K2::PN_Execute);
 
 	// Button Name pin
-	const auto NamePin = CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Text, NamePinName);
+	const auto NamePin = CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_String, NamePinName);
 	NamePin->PinType.bIsConst = true;
 	NamePin->DefaultTextValue = FText::AsCultureInvariant("");
 
@@ -85,7 +85,7 @@ void UK2Node_ImGuiButton::ExpandNode(FKismetCompilerContext& CompilerContext, UE
 	Button->FunctionReference.SetExternalMember(GET_FUNCTION_NAME_CHECKED(UImGuiBlueprintLibrary, ImGui_Button), UImGuiBlueprintLibrary::StaticClass());
 	Button->AllocateDefaultPins();
 
-	const auto FuncNamePin = Button->FindPinChecked(TEXT("Name"));
+	const auto FuncNamePin = Button->FindPinChecked(TEXT("Text"));
 	const auto FuncSizePin = Button->FindPinChecked(TEXT("Size"));
 	const auto FuncReturnValuePin = Button->GetReturnValuePin();
 
