@@ -63,21 +63,25 @@ public:
 	}
 
 	UFUNCTION(BlueprintCallable, Category="ImGui|Basic")
-	static bool ImGui_Slider(FString Text, float Min, float Max, float& Value)
+	static bool ImGui_Slider(FString Text, float Min, float Max, UPARAM(ref) float& Value)
 	{
-		static float SliderValue = 0;
-		bool Success = ImGui::SliderFloat(TCHAR_TO_UTF8(*Text), &SliderValue, Min, Max);
-		Value = SliderValue;
-		return Success;
+		bool Pressed = false;
+		if(ImGui::SliderFloat(TCHAR_TO_UTF8(*Text), &Value, Min, Max))
+		{
+			Pressed = true;
+		}
+		return Pressed;
 	}
 
 	UFUNCTION(BlueprintCallable, Category="ImGui|Basic")
-	static bool ImGui_VSlider(FString Text, float Min, float Max, FVector2D Size, float& Value)
+	static bool ImGui_VSlider(FString Text, float Min, float Max, FVector2D Size, UPARAM(ref) float& Value)
 	{
-		static float SliderValue = 0;
-		bool Success = ImGui::VSliderFloat(TCHAR_TO_UTF8(*Text), ImVec2(Size.X, Size.Y), &SliderValue, Min, Max);
-		Value = SliderValue;
-		return Success;
+		bool Pressed = false;
+		if(ImGui::VSliderFloat(TCHAR_TO_UTF8(*Text), ImVec2(Size.X, Size.Y), &Value, Min, Max))
+		{
+			Pressed = true;
+		}
+		return Pressed;
 	}
 
 	//If @Text is empty, it'll display the percentage
